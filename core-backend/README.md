@@ -40,3 +40,7 @@ php bin/console make:admin:crud
 ```bash
 php bin/console make:entity --api-resource
 ```
+
+> Username : prénom des utilisateurs
+> Mot de passe : passer123
+> password_client : client
