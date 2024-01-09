@@ -17,7 +17,7 @@ class Order
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $orderedAt = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -34,14 +34,14 @@ class Order
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getOrderedAt(): ?\DateTimeImmutable
     {
-        return $this->createdAt;
+        return $this->orderedAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setOrderedAt(\DateTimeImmutable $orderedAt): static
     {
-        $this->createdAt = $createdAt;
+        $this->orderedAt = $orderedAt;
 
         return $this;
     }

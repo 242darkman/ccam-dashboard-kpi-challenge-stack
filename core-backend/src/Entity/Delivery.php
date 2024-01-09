@@ -14,7 +14,7 @@ class Delivery
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $deliveredAt = null;
 
     #[ORM\Column(length: 50)]
     private ?string $delivery_number = null;
@@ -40,14 +40,14 @@ class Delivery
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getDeliveredAt(): ?\DateTimeImmutable
     {
-        return $this->createdAt;
+        return $this->deliveredAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setDeliveredAt(\DateTimeImmutable $deliveredAt): static
     {
-        $this->createdAt = $createdAt;
+        $this->deliveredAt = $deliveredAt;
 
         return $this;
     }
