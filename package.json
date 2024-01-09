@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-core": "cd core-backend && symfony server:start",
+    "start-core": "cd core-backend && php bin/console server:start",
     "start-office": "cd office-frontend && npm run dev",
     "start": "npm run start-core & npm run start-office"
   },
