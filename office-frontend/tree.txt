@@ -1,0 +1,34 @@
+.
+├── README.md
+├── jsconfig.json
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── next.svg
+│   └── vercel.svg
+├── src
+│   └── app
+│       ├── _api
+│       │   └── auth
+│       │       └── auth.api.js
+│       ├── _context
+│       │   └── AuthContext.js
+│       ├── _lib
+│       │   └── server
+│       │       └── auth.js
+│       ├── _middleware
+│       │   └── middleware.js
+│       ├── _utils
+│       │   └── api.js
+│       ├── favicon.ico
+│       ├── globals.css
+│       ├── layout.js
+│       ├── login
+│       │   └── page.js
+│       └── page.js
+├── tailwind.config.js
+└── tree.txt
+
+11 directories, 20 files
