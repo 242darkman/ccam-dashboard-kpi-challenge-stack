@@ -18,9 +18,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\DiscriminatorMap(["customer" => Customer::class])]
+#[ORM\DiscriminatorMap(["customer" => Customer::class, "admin" => User::class])]
 #[ORM\InheritanceType("JOINED")]
-#[ORM\DiscriminatorColumn(name:"type", type:"string")]
+#[ORM\DiscriminatorColumn(name: "type", type: "string")]
 #[ApiResource(
     operations: [
         new Get(
