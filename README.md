@@ -1,1 +1,1 @@
-# ccam-dashboard-kpi-challenge-stack
+# dashboard-kpi-challenge-stack
