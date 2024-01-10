@@ -1,15 +1,16 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import { ThemeProvider } from "@mui/material/styles";
+import { theme } from "../app/theme";
 
-export default function ButtonUsage() {
-  const buttonStyle = {
-    background: '#57CC99',
-    color: '#22577A', 
-    width: '5px',
-  };
+export default function ButtonUsage({ buttonText }) {
   return (
-    <Button variant="contained" style={buttonStyle}>
-      Mon compte
-    </Button>
+    <ThemeProvider theme={theme}>
+      <Button 
+      style={{ backgroundColor: theme.palette.secondary.main,  color:theme.palette.primary.main}}
+      variant="contained">
+        {buttonText}
+      </Button>
+    </ThemeProvider>
   );
 }
