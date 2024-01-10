@@ -1,4 +1,4 @@
-# dashboard-kpi-challenge-   <a name="readme-top"></a>
+# dashboard-kpi-challenge-stack   <a name="readme-top"></a>
 
 ## Auteurs 🎭
 
@@ -37,7 +37,7 @@ xxxxxxxxxxxxxxxxxxx
 
 ## Pré-requis 🎨
 
-- **Nodejs** version supérieur à 18.12.0
+- **Nodejs** > 18.12.0
 - **Symfony** sera utilisé pour ...
 - **React** sera utilisé pour ...
 
