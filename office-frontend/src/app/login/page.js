@@ -1,10 +1,10 @@
+'use client'
 import get from 'lodash/get.js';
 import { login } from '@/app/_api/auth/auth.api.js';
-import { useAuth } from '../context/auth-context';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+
 
 const LoginPage = () => {
-  const { setToken } = useAuth();
   const router = useRouter();
 
   const handleLogin = async (username, password) => {
@@ -18,7 +18,7 @@ const LoginPage = () => {
     if (errorCodeResponse === 401) {
       return;
     }
-    
+
     router.push('/');
   };
 
