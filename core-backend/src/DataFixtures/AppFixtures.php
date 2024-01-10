@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\ComplaintsAndReturns;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
@@ -9,6 +10,7 @@ use App\Entity\Customer;
 use App\Entity\Order;
 use App\Entity\Delivery;
 use App\Entity\Question;
+use App\Entity\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -33,6 +35,12 @@ class AppFixtures extends Fixture
 
         // Création des questions
         $this->createQuestions($manager);
+
+        // Création des réponses avec commentaires aléatoires
+        $this->createResponses($manager);
+
+        // Création des plaintes et retours
+        $this->createComplaintsAndReturns($manager);
     }
 
     private function createAdmins(ObjectManager $manager): void
@@ -57,6 +65,7 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+        $manager->clear();
     }
 
     private function createCustomersAndUsers(ObjectManager $manager): void
@@ -90,6 +99,7 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+        $manager->clear();
     }
 
     private function createOrdersAndDeliveries(ObjectManager $manager): void
@@ -102,7 +112,7 @@ class AppFixtures extends Fixture
         // Récupérer tous les clients
         $customers = $manager->getRepository(Customer::class)->findAll();
 
-        for ($i = 1; $i <= 10490; $i++) {
+        for ($i = 1; $i <= 11490; $i++) {
             $order = new Order();
             $delivery = new Delivery();
 
@@ -156,10 +166,8 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+        $manager->clear();
     }
-
-
-
 
     private function createQuestions(ObjectManager $manager): void
     {
@@ -176,6 +184,68 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+        $manager->clear();
+    }
+
+    private function createResponses(ObjectManager $manager): void
+    {
+        // Récupérer toutes les questions et livraisons
+        $questions = $manager->getRepository(Question::class)->findAll();
+        $deliveries = $manager->getRepository(Delivery::class)->findAll();
+        $customerComments = [
+            'Livraison rapide et produit en parfait état. Service clientèle exceptionnel!',
+            'Incroyablement efficace, la commande est arrivée plus tôt que prévu. Très satisfait!',
+            'Service impeccable, livraison soignée et ponctuelle. Je recommande vivement!',
+            'Livraison dans les délais, mais l\'emballage aurait pu être mieux.',
+            'Correct, mais le suivi de commande n\'était pas très clair.',
+            'Délais respectés, mais communication avec le service client à améliorer.',
+            'Livraison tardive et colis endommagé. Peut mieux faire.',
+            'Délai trop long et service client peu réactif. Déçu de cette expérience.',
+            'Commande incomplète à l\'arrivée et difficulté pour joindre le service client.',
+            'Colis reçu endommagé et processus de remplacement lent et compliqué.'
+        ];
+        $randomCommentIndex = array_rand($customerComments);
+
+
+        foreach ($deliveries as $delivery) {
+            foreach ($questions as $question) {
+                $response = new Response();
+                $response->setQuestion($question)
+                    ->setDelivery($delivery)
+                    ->setValue(random_int(1, 5))
+                    ->setComment($customerComments[$randomCommentIndex]);
+
+                $manager->persist($response);
+            }
+        }
+
+        $manager->flush();
+        $manager->clear();
+    }
+
+    private function createComplaintsAndReturns(ObjectManager $manager): void
+    {
+        $types = ['complaints', 'returns'];
+        $deliveries = $manager->getRepository(Delivery::class)->findAll();
+
+        for ($i = 0; $i < 531; $i++) {
+            $complaintAndReturn = new ComplaintsAndReturns();
+            $complaintAndReturn->setType($types[array_rand($types)]);
+
+            // Obtenir une livraison aléatoire
+            $delivery = $deliveries[array_rand($deliveries)];
+            $complaintAndReturn->setDelivery($delivery);
+
+            // Fixer la date de création à une date postérieure à la date de livraison
+            $createdAt = clone $delivery->getDeliveredAt();
+            $createdAt->modify('+' . rand(1, 15) . ' days');
+            $complaintAndReturn->setCreatedAt($createdAt);
+
+            $manager->persist($complaintAndReturn);
+        }
+
+        $manager->flush();
+        $manager->clear();
     }
 
     private function generateCustomerNumber(string $name): string
