@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ResponseRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ResponseRepository::class)]
@@ -22,6 +23,9 @@ class Response
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Delivery $delivery = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $comment = null;
 
     public function getId(): ?int
     {
@@ -60,6 +64,18 @@ class Response
     public function setDelivery(?Delivery $delivery): static
     {
         $this->delivery = $delivery;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): static
+    {
+        $this->comment = $comment;
 
         return $this;
     }
