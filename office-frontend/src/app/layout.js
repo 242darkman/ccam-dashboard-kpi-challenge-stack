@@ -1,8 +1,7 @@
-// layout.js
-import { Inter } from 'next/font/google';
+import { Inter } from 'next/font/google'
 import Head from 'next/head'; 
 import './globals.css';
-import Image from 'next/image';
+import logo from '../assets/logo.png';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +19,7 @@ export default function RootLayout({ children, logo }) {
         </main>
       </body>
     </html>
+  );
   );
 }
 
