@@ -21,28 +21,19 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-//    /**
-//     * @return Order[] Returns an array of Order objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('o.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Order
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * Récupére toutes les commandes d'un client.
+     *
+     * @param string $clientName le username du client de la commande.
+     * @return array Les commandes du client.
+     */
+    public function findOrdersByCustomerNumber(string $customerNumber)
+    {
+        return $this->createQueryBuilder('o')
+            ->join('o.customer', 'c')
+            ->where('c.customer_number = :customerNumber')
+            ->setParameter('customerNumber', $customerNumber)
+            ->getQuery()
+            ->getResult();
+    }
 }

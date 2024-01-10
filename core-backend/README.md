@@ -41,6 +41,11 @@ php bin/console make:admin:crud
 php bin/console make:entity --api-resource
 ```
 
+## Générer des clés JWT
+```bash
+php bin/console lexik:jwt:generate-keypair
+```
+
 > Username : prénom des utilisateurs
-> Mot de passe : passer123
-> password_client : client
+> Mot de passe : adminpass
+> password_client : clientpass
