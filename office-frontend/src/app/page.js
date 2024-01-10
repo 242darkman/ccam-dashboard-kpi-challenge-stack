@@ -33,7 +33,7 @@ export default function Home() {
           </div>
           </section>
           <section>
-          <div style={{ marginLeft: '250px'}}>
+          <div style={{ marginLeft: '252px'}}>
             <Image src={Graph} alt='Graph' width={500} height={500} />
           </div>
           </section>
