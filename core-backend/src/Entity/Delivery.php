@@ -13,7 +13,7 @@ class Delivery
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deliveredAt = null;
 
     #[ORM\Column(length: 50)]
@@ -39,7 +39,7 @@ class Delivery
     private ?\DateTimeImmutable $deliveryExpected = null;
 
     #[ORM\Column]
-    private ?bool $isEmailSent = null;
+    private ?bool $isEmailSent = false;
 
     public function getId(): ?int
     {
