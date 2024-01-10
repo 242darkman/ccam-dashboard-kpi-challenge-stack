@@ -16,7 +16,7 @@ export default function HoverRating() {
                 {/* Type Demande */}
                 <div className="shadow-md shadow-[#00000040] flex flex-col items-start gap-7 pt-[1.5625rem] pr-[1.5625rem] pb-[1.5625rem] pl-[1.5625rem] w-[774px] rounded-md bg-neutral-50 mb-[30px]">
                     <div className="text-black font-['Roboto'] leading-[normal]">
-                        Spécifier le type de votre demande
+                        Spécifier le type de votre demand
                     </div>
                     <div className="flex items-start">
                         <select
