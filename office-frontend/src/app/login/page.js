@@ -1,9 +1,8 @@
-"use client"
+'use client'
 import get from 'lodash/get.js';
 import { login } from '@/app/_api/auth/auth.api.js';
 import ButtonUsage from '@/components/buttonAccueil';
 import { useRouter } from 'next/navigation';
-
 const LoginPage = () => {
   
   const router = useRouter();

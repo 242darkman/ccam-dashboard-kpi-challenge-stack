@@ -19,4 +19,4 @@
 ###< friendsofphp/php-cs-fixer ###
 
 ### migrations
-/migrations/*
+/migrations/*.php
