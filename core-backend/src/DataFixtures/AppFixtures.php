@@ -102,7 +102,7 @@ class AppFixtures extends Fixture
         // Récupérer tous les clients
         $customers = $manager->getRepository(Customer::class)->findAll();
 
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 1; $i < 10490; $i++) {
             $order = new Order();
             $delivery = new Delivery();
 
@@ -119,19 +119,27 @@ class AppFixtures extends Fixture
             $manager->persist($order);
 
             $delay = $delivery->getDistance() <= 500 ? 24 : 48;
-            $deliveredAt = clone $orderedAt;
-            $deliveredAt->modify('+' . $delay . ' hours');
+            $deliveryExpected = clone $orderedAt;
+            $deliveryExpected->modify('+' . $delay . ' hours');
+            $deliveredAt = null;
+
+            if ($i % 10 !== 1 || $delivery->getDistance() <= 500) {
+                $deliveredAt = clone $deliveryExpected;
+            }
 
             if ($i % 10 === 1 && $delivery->getDistance() <= 500) {
-                $deliveredAt->modify('-25 hours'); // livrée tôt
-            } elseif ($i % 10 === 1 && $delivery->getDistance() > 500) {
-                $deliveredAt->modify('+50 hours'); // livrée tard
+                $deliveredAt->modify('-5 hours'); // livrée tôt
             }
+            if ($i % 10 === 1 && $delivery->getDistance() > 500) {
+                $deliveredAt->modify('+8 hours'); // livrée tard
+            }
+
 
             $delivery->setOrderId($order)
                 ->setDistance(rand(1, 1000))
                 ->setDeliveryNumber('DEL' . str_pad((string)$i, 4, '0', STR_PAD_LEFT))
                 ->setDeliveredAt($deliveredAt)
+                ->setDeliveryExpected($deliveryExpected)
                 ->setDayTime($dayTimes[array_rand($dayTimes)])
                 ->setWeekTime($weekTimes[array_rand($weekTimes)]);
 
@@ -151,8 +159,6 @@ class AppFixtures extends Fixture
     {
         $questions = [
             'Êtes-vous satisfait de la rapidité de la livraison ?',
-            'Votre livraison contenait-elle des produits cassés ou endommagées ?',
-            'La temperature de conservation de votre produit était-elle suffisante lors de la livraison ?',
             'Recommanderiez-vous notre entreprise à vos amis ou à votre famille ?',
             'Êtes-vous satisfait de votre expérience avec notre entreprise ?'
         ];
