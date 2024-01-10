@@ -20,6 +20,5 @@ export default function RootLayout({ children, logo }) {
       </body>
     </html>
   );
-  );
 }
 
