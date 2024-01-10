@@ -102,7 +102,7 @@ class AppFixtures extends Fixture
         // Récupérer tous les clients
         $customers = $manager->getRepository(Customer::class)->findAll();
 
-        for ($i = 1; $i < 10490; $i++) {
+        for ($i = 1; $i <= 10490; $i++) {
             $order = new Order();
             $delivery = new Delivery();
 
@@ -118,23 +118,25 @@ class AppFixtures extends Fixture
 
             $manager->persist($order);
 
-            $delay = $delivery->getDistance() <= 500 ? 24 : 48;
-            $deliveryExpected = clone $orderedAt;
-            $deliveryExpected->modify('+' . $delay . ' hours');
-            $deliveredAt = null;
+            // Calculer un délai aléatoire entre 1 et 7 jours
+            $daysToAdd = rand(0, 7);
+            $deliveryExpected = (clone $orderedAt)->modify('+' . $daysToAdd . ' days');
 
-            if ($i % 10 !== 1 || $delivery->getDistance() <= 500) {
-                $deliveredAt = clone $deliveryExpected;
+            // S'assurer que l'heure est comprise entre 8h et 22h
+            $hour = rand(8, 22);
+            $deliveryExpected = $deliveryExpected->setTime($hour, 0);
+
+            // Décider si la livraison sera à l'heure, en avance ou en retard
+            $deliveryOutcome = rand(0, 2);
+            $deliveredAt = clone $deliveryExpected;
+
+            if ($deliveryOutcome === 1) { // Livraison en avance
+                $deliveredAt = $deliveredAt->modify('-' . rand(1, 24) . ' hours');
+            } elseif ($deliveryOutcome === 2) { // Livraison en retard
+                $deliveredAt = $deliveredAt->modify('+' . rand(1, 24) . ' hours');
             }
 
-            if ($i % 10 === 1 && $delivery->getDistance() <= 500) {
-                $deliveredAt->modify('-5 hours'); // livrée tôt
-            }
-            if ($i % 10 === 1 && $delivery->getDistance() > 500) {
-                $deliveredAt->modify('+8 hours'); // livrée tard
-            }
-
-
+            // Définir les détails de la livraison
             $delivery->setOrderId($order)
                 ->setDistance(rand(1, 1000))
                 ->setDeliveryNumber('DEL' . str_pad((string)$i, 4, '0', STR_PAD_LEFT))
@@ -144,16 +146,20 @@ class AppFixtures extends Fixture
                 ->setWeekTime($weekTimes[array_rand($weekTimes)]);
 
             // Pour les 100 premières livraisons, assigner des statuts spécifiques
-            if ($i < 100) {
+            if ($i <= 100) {
                 $delivery->setStatus($deliveryStatuses[array_rand($deliveryStatuses)]);
+            } else {
+                $delivery->setStatus($deliveryOutcome === 2 ? 'delayed' : 'delivered');
             }
-            $delivery->setStatus('delivered');
 
             $manager->persist($delivery);
         }
 
         $manager->flush();
     }
+
+
+
 
     private function createQuestions(ObjectManager $manager): void
     {
