@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Repository\OrderRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends AbstractController
@@ -18,17 +16,20 @@ class OrderController extends AbstractController
      * @param string $clientName Le nom d'utilisateur de l'utilisateur.
      * @return Some_Return_Value La réponse JSON contenant les commandes.
      */
-    #[Route('/order/get-by-customer/{customerNumber}', name: 'get_customer_orders', methods: ['GET'])]
+    #[Route('/order/get-by-customer', name: 'get_customer_orders', methods: ['GET'])]
     public function getOrdersByCustomerNumber(
-        OrderRepository $orderRepository,
-        string $customerNumber
+        UserRepository $userRepository
     ) {
-        $orders = $orderRepository->findOrdersByCustomerNumber($customerNumber);
+        $user = $this->getUser();
+        $retrievedUser = $userRepository->find($user);
 
-        if (!$orders) {
-            return new JsonResponse(['error' => 'No orders found for this client name.'], Response::HTTP_NOT_FOUND);
+        // Vérifiez si l'utilisateur est un client
+        if ($retrievedUser instanceof \App\Entity\Customer) {
+            $orders = $retrievedUser->getOrders();
+
+            return $this->json(['orders' => $orders]);
         }
 
-        return $this->json($orders, Response::HTTP_OK);
+        return $this->json(['message' => 'No orders found for this client name.'], Response::HTTP_NOT_FOUND);
     }
 }
