@@ -35,6 +35,12 @@ class Delivery
     #[ORM\Column(length: 50)]
     private ?string $status = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $deliveryExpected = null;
+
+    #[ORM\Column]
+    private ?bool $isEmailSent = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +126,30 @@ class Delivery
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDeliveryExpected(): ?\DateTimeImmutable
+    {
+        return $this->deliveryExpected;
+    }
+
+    public function setDeliveryExpected(\DateTimeImmutable $deliveryExpected): static
+    {
+        $this->deliveryExpected = $deliveryExpected;
+
+        return $this;
+    }
+
+    public function isIsEmailSent(): ?bool
+    {
+        return $this->isEmailSent;
+    }
+
+    public function setIsEmailSent(bool $isEmailSent): static
+    {
+        $this->isEmailSent = $isEmailSent;
 
         return $this;
     }
