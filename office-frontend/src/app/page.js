@@ -7,7 +7,6 @@ import Img from '../assets/imagelogo.png';
 import RootLayout from './layout';
 import Logo from '@/assets/logo.png';
 import Graph from '../assets/Rectangle21.png';
-import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -24,9 +23,7 @@ export default function Home() {
               <Image src={Img} alt='Image Logo' width={150} height={150} />
             </div>
             <div>
-              <Link href="/login" passHref>
-                <ButtonUsage buttonText="Se connecter" as="/login" />
-              </Link>
+              <ButtonUsage buttonText="Se connecter" />
             </div>
           </div>
           <section>
@@ -39,10 +36,3 @@ export default function Home() {
     </RootLayout>
   );
 }
-
-
-
-
-
-
-
