@@ -22,7 +22,7 @@ const LoginPage = () => {
   };
   return (
     <RootLayout logo={Logo}>
-    <div  style={{ backgroundColor: '#FAFAFA' }} class="min-h-screen bg-gray-100  py-6 flex flex-col justify-center sm:py-12">
+    <div  style={{ backgroundColor: 'white' }} class="min-h-screen bg-gray-100  py-6 flex flex-col justify-center sm:py-12">
       <div class="relative py-3 sm:max-w-xl sm:mx-auto">
           <div class="max-w-md mx-auto">
             <div class="flex justify-center">
