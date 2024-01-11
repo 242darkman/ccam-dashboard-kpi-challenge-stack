@@ -80,4 +80,16 @@ class ResponseRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getAverageRecommandationScore()
+    {
+        $query = $this->createQueryBuilder('r')
+            ->select('SUM(r.value) as totalValue, COUNT(r.id) as totalCount')
+            ->join('r.question', 'q')
+            ->where('q.description = :description')
+            ->setParameter('description', 'Recommanderiez-vous notre entreprise à vos amis ou à votre famille ?')
+            ->getQuery();
+
+        return $query->getSingleResult();
+    }
 }
