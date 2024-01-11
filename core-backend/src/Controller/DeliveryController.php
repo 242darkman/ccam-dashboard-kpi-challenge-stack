@@ -2,14 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\ComplaintsAndReturns;
 use App\Repository\DeliveryRepository;
-use App\Repository\OrderRepository;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\Routing\Annotation\Route;
 
 class DeliveryController extends AbstractController
@@ -60,37 +55,6 @@ class DeliveryController extends AbstractController
         return $this->json(['data' => $data]);
     }
 
-
-    // Insertion des retours
-    #[Route('/create', name: 'create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $manager, OrderRepository $orderRepository)
-    {
-        $data = json_decode($request->getContent(), true);
-        $type = $data["type"];
-        $order = $data["order"];
-        $description = $data["description"];
-
-        $orderId = $orderRepository->find($order);
-
-        // Créez une nouvelle instance de ComplaintsAndReturns
-        $complaint = new ComplaintsAndReturns();
-
-        $complaint->setType($type);
-        $complaint->setCreatedAt(new \DateTimeImmutable());
-        $complaint->setDescription($description);
-        //$complaint->setOrders($orderId);
-
-        // Persistez l'entité dans la base de données
-        $manager->persist($complaint);
-        $manager->flush();
-
-        // Retournez une réponse appropriée
-        //return new Response('Complaint created successfully', Response::HTTP_CREATED);
-        return $this->json([
-            'Complaint created successfully', Response::HTTP_CREATED
-        ]);
-    }
-
     // récupérer la liste des livraisons
     #[Route('/delivery', name: 'app_delivery', methods: ['GET'])]
     public function getDelivery(DeliveryRepository $deliveryRepository)
@@ -98,25 +62,4 @@ class DeliveryController extends AbstractController
         $data = $deliveryRepository->findAll();
         return $this->json(['data' => $data]);
     }
-
-
-
-
-
-
-    // récupérer la liste des livraisons
-    // #[Route('/delivery22', name: 'app_delivery', methods: ['GET'])]
-    // public function getDelivery(DeliveryRepository $deliveryRepository)
-    // {
-
-    //     $data = $deliveryRepository->findAll();
-    //     $deliveryNumbers = array();
-
-    //     foreach ($data as $delivery) {
-
-    //         $deliveryNumbers[] = $delivery->getDeliveryNumber();
-    //     }
-
-    //     return $this->json(['deliveryNumbers' => $deliveryNumbers]);
-    // }
 }

@@ -37,6 +37,9 @@ class Delivery
     #[ORM\Column]
     private ?bool $isEmailSent = false;
 
+    #[ORM\ManyToOne]
+    private ?Order $orders = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +137,18 @@ class Delivery
     public function setIsEmailSent(bool $isEmailSent): static
     {
         $this->isEmailSent = $isEmailSent;
+
+        return $this;
+    }
+
+    public function getOrders(): ?Order
+    {
+        return $this->orders;
+    }
+
+    public function setOrders(?Order $orders): static
+    {
+        $this->orders = $orders;
 
         return $this;
     }

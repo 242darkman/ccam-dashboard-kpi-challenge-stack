@@ -45,7 +45,7 @@ class AppFixtures extends Fixture
         $this->createResponses($manager, $this->appService);
 
         // Création des plaintes et retours
-        // $this->createComplaintsAndReturns($manager);
+        $this->createComplaintsAndReturns($manager);
     }
 
     private function createAdmins(ObjectManager $manager): void
@@ -152,8 +152,8 @@ class AppFixtures extends Fixture
             }
 
             // Définir les détails de la livraison
-            //$delivery->setOrders($order)
-            $delivery
+            $delivery->setOrders($order)
+                //$delivery
                 ->setDistance(rand(1, 1000))
                 ->setDeliveryNumber('DEL' . str_pad((string)$i, 4, '0', STR_PAD_LEFT))
                 ->setDeliveredAt($deliveredAt)
@@ -242,49 +242,49 @@ class AppFixtures extends Fixture
         $manager->clear();
     }
 
-    // private function createComplaintsAndReturns(ObjectManager $manager): void
-    // {
-    //     $types = ['complaint', 'return'];
-    //     $complaintDescriptions = [
-    //         "Vaccin reçu avec un emballage endommagé",
-    //         "Retard dans la livraison du vaccin, dépassement de la date prévue",
-    //         "Température de conservation inadéquate à la réception du vaccin",
-    //         "Vaccins reçus avec des étiquettes manquantes ou incorrectes",
-    //     ];
-    //     $returnDescriptions = [
-    //         "Retour en raison de vaccins expirés",
-    //         "Retour pour surplus de commande de vaccins",
-    //         "Retour de vaccins suite à une erreur de commande",
-    //     ];
-    //     $orders = $manager->getRepository(Order::class)->findAll();
-    //     $description = '';
+    private function createComplaintsAndReturns(ObjectManager $manager): void
+    {
+        $types = ['complaint', 'return'];
+        $complaintDescriptions = [
+            "Vaccin reçu avec un emballage endommagé",
+            "Retard dans la livraison du vaccin, dépassement de la date prévue",
+            "Température de conservation inadéquate à la réception du vaccin",
+            "Vaccins reçus avec des étiquettes manquantes ou incorrectes",
+        ];
+        $returnDescriptions = [
+            "Retour en raison de vaccins expirés",
+            "Retour pour surplus de commande de vaccins",
+            "Retour de vaccins suite à une erreur de commande",
+        ];
+        $orders = $manager->getRepository(Order::class)->findAll();
+        $description = '';
 
-    //     for ($i = 0; $i < 2531; $i++) {
-    //         $complaintAndReturn = new ComplaintsAndReturns();
-    //         $type = $types[array_rand($types)];
+        for ($i = 0; $i < 2531; $i++) {
+            $complaintAndReturn = new ComplaintsAndReturns();
+            $type = $types[array_rand($types)];
 
-    //         if ($i % 20 == 0) {
-    //             $description = $type === 'complaint' ? $complaintDescriptions[array_rand($complaintDescriptions)] : $returnDescriptions[array_rand($returnDescriptions)];
-    //         }
+            if ($i % 20 == 0) {
+                $description = $type === 'complaint' ? $complaintDescriptions[array_rand($complaintDescriptions)] : $returnDescriptions[array_rand($returnDescriptions)];
+            }
 
-    //         $complaintAndReturn->setType($type);
-    //         $complaintAndReturn->setDescription($description);
+            $complaintAndReturn->setType($type);
+            $complaintAndReturn->setDescription($description);
 
-    //         // Obtenir une commande aléatoire
-    //         $order = $orders[array_rand($orders)];
-    //         $complaintAndReturn->setOrders($order);
+            // Obtenir une commande aléatoire
+            $order = $orders[array_rand($orders)];
+            $complaintAndReturn->setOrders($order);
 
-    //         // Fixer la date de création à une date postérieure à la date de commande
-    //         $createdAt = clone $order->getOrderedAt();
-    //         $createdAt->modify('+' . rand(7, 30) . ' days');
-    //         $complaintAndReturn->setCreatedAt($createdAt);
+            // Fixer la date de création à une date postérieure à la date de commande
+            $createdAt = clone $order->getOrderedAt();
+            $createdAt->modify('+' . rand(7, 30) . ' days');
+            $complaintAndReturn->setCreatedAt($createdAt);
 
-    //         $manager->persist($complaintAndReturn);
-    //     }
+            $manager->persist($complaintAndReturn);
+        }
 
-    //     $manager->flush();
-    //     $manager->clear();
-    // }
+        $manager->flush();
+        $manager->clear();
+    }
 
     private function generateCustomerNumber(string $name): string
     {
