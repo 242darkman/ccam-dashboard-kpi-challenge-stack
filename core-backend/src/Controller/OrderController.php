@@ -36,7 +36,8 @@ class OrderController extends AbstractController
             // $offset = ($page - 1) * $limit;
 
             // Récupérer les commandes avec pagination
-            $data = $retrievedUser->getOrders(); // Supposant que getOrders supporte la pagination
+            $data = $retrievedUser->getOrders();
+            //dd($data); // Supposant que getOrders supporte la pagination
 
             // // Récupérer le nombre total de commandes
             // $totalOrders = $userRepository->count([]);

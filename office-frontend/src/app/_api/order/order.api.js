@@ -13,6 +13,6 @@ export async function getOrders() {
     method: "GET",
   });
   const response = await axios(request);
-  console.log("data est ", response.data);
+  // console.log("data est ", response.data);
   return response.data;
 }

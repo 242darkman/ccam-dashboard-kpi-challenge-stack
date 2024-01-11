@@ -78,7 +78,7 @@ class DeliveryController extends AbstractController
         $complaint->setType($type);
         $complaint->setCreatedAt(new \DateTimeImmutable());
         $complaint->setDescription($description);
-        $complaint->setOrders($orderId);
+        //$complaint->setOrders($orderId);
 
         // Persistez l'entité dans la base de données
         $manager->persist($complaint);

@@ -23,10 +23,6 @@ class ComplaintsAndReturns
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'complaintsAndReturns')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Order $orders = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -64,18 +60,6 @@ class ComplaintsAndReturns
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getOrders(): ?Order
-    {
-        return $this->orders;
-    }
-
-    public function setOrders(?Order $orders): static
-    {
-        $this->orders = $orders;
 
         return $this;
     }
