@@ -12,6 +12,7 @@ export default function ButtonTest({ buttonText, onClick }) {
         }}
         variant="contained"
         onClick={onClick}
+        className="w-full inline-flex justify-center items-center gap-2.5 p-2.5 p-2 rounded bg-[#57cc99] text-[#22577a] font-['Roboto'] font-medium leading-[normal]"
       >
         {buttonText}
       </Button>

@@ -22,6 +22,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { format } from "date-fns";
 import Link from "next/link";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -123,7 +124,6 @@ export default function Order(props) {
           ),
         }));
         setOrders(formattedOrders);
-        //setOrders(response.data);
       } catch (error) {
         console.error(
           "Une erreur s'est produite lors de la récupération des commandes",
@@ -137,11 +137,14 @@ export default function Order(props) {
 
   return (
     <div className="ml-10 mr-10">
-      <h1 className="text-center"> Mes Commandes </h1>
+        
+      <h1 className="text-[#22577a] font-['Arial'] text-4xl leading-[normal] mb-[60px] text-center ">
+        Mes Commandes
+      </h1>
 
       <TableContainer component={Paper} className="text-center">
         <Table
-          sx={{ width: "80%", margin: "auto" }}
+          sx={{ width: "100%", margin: "auto" }}
           aria-label="custom pagination table"
         >
           <TableBody>
@@ -152,7 +155,9 @@ export default function Order(props) {
               <TableCell style={{ width: "25%" }}>
                 Date de la commande
               </TableCell>
-              <TableCell style={{ width: "25%" }}>Retour/Reclamation</TableCell>
+              <TableCell style={{ width: "25%" }}>
+                Retours / Reclamations
+              </TableCell>
             </TableRow>
 
             {(rowsPerPage > 0
@@ -169,9 +174,16 @@ export default function Order(props) {
                 <TableCell style={{ width: 100 }}>{order.amount}</TableCell>
                 <TableCell style={{ width: 100 }}>{order.orderedAt}</TableCell>
                 <TableCell style={{ width: 100 }}>
-                  {/* //<Link to={`/order/${order.id}`}>Détails</Link> */}
-                  {/* <Link href="/order/${order.id}">Actions</Link> */}
-                  <Link href={`/order/${order.id}`}>Détails</Link>
+                  <Link href={`/order/${order.id}`}>
+                    <ArrowForwardIcon
+                      style={{
+                        color: "#22577a",
+                        width: 20,
+                        height: 20,
+                        borderRadius: 5,
+                      }}
+                    />
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}
@@ -184,7 +196,7 @@ export default function Order(props) {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[5, 10, 25, { label: "Tout", value: -1 }]}
                 colSpan={3}
                 count={orders.length}
                 rowsPerPage={rowsPerPage}
