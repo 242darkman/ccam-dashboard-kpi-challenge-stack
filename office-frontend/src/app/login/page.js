@@ -41,6 +41,12 @@ const LoginPage = () => {
               <h1 className="text-3xl font-semibold text-cyan-800 ">
                 Connexion
               </h1>
+    <RootLayout logo={Logo}>
+    <div  style={{ backgroundColor: 'white' }} class="min-h-screen bg-gray-100  py-6 flex flex-col justify-center sm:py-12">
+      <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+          <div class="max-w-md mx-auto">
+            <div class="flex justify-center">
+              <h1 class="text-3xl font-semibold text-cyan-800 ">Connexion</h1>
             </div>
             <div className="divide-y divide-gray-200">
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
