@@ -7,10 +7,15 @@ export default function ButtonUsage({ buttonText }) {
   return (
     <ThemeProvider theme={theme}>
       <Button 
-      style={{ backgroundColor: theme.palette.secondary.main,  color:theme.palette.primary.main}}
-      variant="contained">
+        style={{
+          backgroundColor: theme.palette.secondary.main,
+          color: theme.palette.primary.main,
+          width: '391px',
+        }}
+        variant="contained"
+      >
         {buttonText}
       </Button>
     </ThemeProvider>
   );
-}              
+}
