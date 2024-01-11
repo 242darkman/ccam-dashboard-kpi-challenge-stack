@@ -10,7 +10,7 @@ export default function ButtonUsage({ buttonText }) {
         style={{
           backgroundColor: theme.palette.secondary.main,
           color: theme.palette.primary.main,
-          width: '391px',  // Ajustez la largeur selon vos besoins
+          width: '391px',
         }}
         variant="contained"
       >
