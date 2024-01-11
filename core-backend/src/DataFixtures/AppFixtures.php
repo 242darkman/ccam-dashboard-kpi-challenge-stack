@@ -102,7 +102,7 @@ class AppFixtures extends Fixture
         // Récupérer tous les clients
         $customers = $manager->getRepository(Customer::class)->findAll();
 
-        for ($i = 1; $i <= 10490; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             $order = new Order();
             $delivery = new Delivery();
 
@@ -137,7 +137,7 @@ class AppFixtures extends Fixture
             }
 
             // Définir les détails de la livraison
-            $delivery->setOrderId($order)
+            $delivery->setOrders($order)
                 ->setDistance(rand(1, 1000))
                 ->setDeliveryNumber('DEL' . str_pad((string)$i, 4, '0', STR_PAD_LEFT))
                 ->setDeliveredAt($deliveredAt)

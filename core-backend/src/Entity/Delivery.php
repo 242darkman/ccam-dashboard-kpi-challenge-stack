@@ -19,10 +19,6 @@ class Delivery
     #[ORM\Column(length: 50)]
     private ?string $delivery_number = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Order $orderId = null;
-
     #[ORM\Column]
     private ?float $distance = null;
 
@@ -40,6 +36,9 @@ class Delivery
 
     #[ORM\Column]
     private ?bool $isEmailSent = false;
+
+    #[ORM\ManyToOne(inversedBy: 'deliveries')]
+    private ?Order $orders = null;
 
     public function getId(): ?int
     {
@@ -66,18 +65,6 @@ class Delivery
     public function setDeliveryNumber(string $delivery_number): static
     {
         $this->delivery_number = $delivery_number;
-
-        return $this;
-    }
-
-    public function getOrderId(): ?Order
-    {
-        return $this->orderId;
-    }
-
-    public function setOrderId(Order $orderId): static
-    {
-        $this->orderId = $orderId;
 
         return $this;
     }
@@ -150,6 +137,18 @@ class Delivery
     public function setIsEmailSent(bool $isEmailSent): static
     {
         $this->isEmailSent = $isEmailSent;
+
+        return $this;
+    }
+
+    public function getOrders(): ?Order
+    {
+        return $this->orders;
+    }
+
+    public function setOrders(?Order $orders): static
+    {
+        $this->orders = $orders;
 
         return $this;
     }
