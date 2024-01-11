@@ -1,4 +1,5 @@
-import { Inter } from 'next/font/google'
+// layout.js
+import { Inter } from 'next/font/google';
 import Head from 'next/head'; 
 import './globals.css';
 import logo from '../assets/logo.png';
@@ -22,4 +23,3 @@ export default function RootLayout({ children, logo }) {
     </html>
   );
 }
-

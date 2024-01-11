@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\ComplaintsAndReturns;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
@@ -9,15 +10,21 @@ use App\Entity\Customer;
 use App\Entity\Order;
 use App\Entity\Delivery;
 use App\Entity\Question;
+use App\Entity\Response;
+use App\Services\AppService;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
     private $passwordEncoder;
+    private $appService;
 
-    public function __construct(UserPasswordHasherInterface $passwordEncoder)
-    {
+    public function __construct(
+        UserPasswordHasherInterface $passwordEncoder,
+        AppService $appService
+    ) {
         $this->passwordEncoder = $passwordEncoder;
+        $this->appService = $appService;
     }
 
     public function load(ObjectManager $manager): void
@@ -33,6 +40,12 @@ class AppFixtures extends Fixture
 
         // Création des questions
         $this->createQuestions($manager);
+
+        // Création des réponses avec commentaires aléatoires
+        $this->createResponses($manager, $this->appService);
+
+        // Création des plaintes et retours
+        $this->createComplaintsAndReturns($manager);
     }
 
     private function createAdmins(ObjectManager $manager): void
@@ -57,6 +70,7 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+        $manager->clear();
     }
 
     private function createCustomersAndUsers(ObjectManager $manager): void
@@ -90,6 +104,7 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+        $manager->clear();
     }
 
     private function createOrdersAndDeliveries(ObjectManager $manager): void
@@ -102,7 +117,7 @@ class AppFixtures extends Fixture
         // Récupérer tous les clients
         $customers = $manager->getRepository(Customer::class)->findAll();
 
-        for ($i = 1; $i < 10490; $i++) {
+        for ($i = 1; $i <= 11490; $i++) {
             $order = new Order();
             $delivery = new Delivery();
 
@@ -118,24 +133,26 @@ class AppFixtures extends Fixture
 
             $manager->persist($order);
 
-            $delay = $delivery->getDistance() <= 500 ? 24 : 48;
-            $deliveryExpected = clone $orderedAt;
-            $deliveryExpected->modify('+' . $delay . ' hours');
-            $deliveredAt = null;
+            // Calculer un délai aléatoire entre 1 et 7 jours
+            $daysToAdd = rand(0, 7);
+            $deliveryExpected = (clone $orderedAt)->modify('+' . $daysToAdd . ' days');
 
-            if ($i % 10 !== 1 || $delivery->getDistance() <= 500) {
-                $deliveredAt = clone $deliveryExpected;
+            // S'assurer que l'heure est comprise entre 8h et 22h
+            $hour = rand(8, 22);
+            $deliveryExpected = $deliveryExpected->setTime($hour, 0);
+
+            // Décider si la livraison sera à l'heure, en avance ou en retard
+            $deliveryOutcome = rand(0, 2);
+            $deliveredAt = clone $deliveryExpected;
+
+            if ($deliveryOutcome === 1) { // Livraison en avance
+                $deliveredAt = $deliveredAt->modify('-' . rand(1, 24) . ' hours');
+            } elseif ($deliveryOutcome === 2) { // Livraison en retard
+                $deliveredAt = $deliveredAt->modify('+' . rand(1, 24) . ' hours');
             }
 
-            if ($i % 10 === 1 && $delivery->getDistance() <= 500) {
-                $deliveredAt->modify('-5 hours'); // livrée tôt
-            }
-            if ($i % 10 === 1 && $delivery->getDistance() > 500) {
-                $deliveredAt->modify('+8 hours'); // livrée tard
-            }
-
-
-            $delivery->setOrderId($order)
+            // Définir les détails de la livraison
+            $delivery->setOrders($order)
                 ->setDistance(rand(1, 1000))
                 ->setDeliveryNumber('DEL' . str_pad((string)$i, 4, '0', STR_PAD_LEFT))
                 ->setDeliveredAt($deliveredAt)
@@ -144,15 +161,17 @@ class AppFixtures extends Fixture
                 ->setWeekTime($weekTimes[array_rand($weekTimes)]);
 
             // Pour les 100 premières livraisons, assigner des statuts spécifiques
-            if ($i < 100) {
+            if ($i <= 100) {
                 $delivery->setStatus($deliveryStatuses[array_rand($deliveryStatuses)]);
+            } else {
+                $delivery->setStatus($deliveryOutcome === 2 ? 'delayed' : 'delivered');
             }
-            $delivery->setStatus('delivered');
 
             $manager->persist($delivery);
         }
 
         $manager->flush();
+        $manager->clear();
     }
 
     private function createQuestions(ObjectManager $manager): void
@@ -170,6 +189,81 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+        $manager->clear();
+    }
+
+    private function createResponses(
+        ObjectManager $manager,
+        AppService $appService
+    ): void {
+        // Récupérer toutes les questions et livraisons
+        $questions = $manager->getRepository(Question::class)->findAll();
+        $deliveries = $manager->getRepository(Delivery::class)->findAll();
+        $customerComments = [
+            'Livraison rapide et produit en parfait état. Service clientèle exceptionnel!',
+            'Incroyablement efficace, la commande est arrivée plus tôt que prévu. Très satisfait!',
+            'Service impeccable, livraison soignée et ponctuelle. Je recommande vivement!',
+            'Livraison dans les délais, mais l\'emballage aurait pu être mieux.',
+            'Correct, mais le suivi de commande n\'était pas très clair.',
+            'Délais respectés, mais communication avec le service client à améliorer.',
+            'Livraison tardive et colis endommagé. Peut mieux faire.',
+            'Délai trop long et service client peu réactif. Déçu de cette expérience.',
+            'Commande incomplète à l\'arrivée et difficulté pour joindre le service client.',
+            'Colis reçu endommagé et processus de remplacement lent et compliqué.'
+        ];
+
+
+        foreach ($deliveries as $delivery) {
+            foreach ($questions as $question) {
+                $response = new Response();
+                $randomComment = $customerComments[array_rand($customerComments)];
+                $classification = $appService->classifierCommentaire($randomComment);
+
+                $value = 0;
+                if ($classification === 'Excellent') {
+                    $value = random_int(9, 10) / 2; // Génère une note entre 4.5 et 5
+                } elseif ($classification === 'Satisfaisant') {
+                    $value = random_int(6, 8) / 2; // Génère une note entre 3 et 4
+                } else {
+                    $value = random_int(2, 5) / 2; // Génère une note entre 1 et 2.5
+                }
+
+                $response->setQuestion($question)
+                    ->setDelivery($delivery)
+                    ->setValue($value)
+                    ->setComment($randomComment);
+
+                $manager->persist($response);
+            }
+        }
+
+        $manager->flush();
+        $manager->clear();
+    }
+
+    private function createComplaintsAndReturns(ObjectManager $manager): void
+    {
+        $types = ['complaints', 'returns'];
+        $deliveries = $manager->getRepository(Delivery::class)->findAll();
+
+        for ($i = 0; $i < 531; $i++) {
+            $complaintAndReturn = new ComplaintsAndReturns();
+            $complaintAndReturn->setType($types[array_rand($types)]);
+
+            // Obtenir une livraison aléatoire
+            $delivery = $deliveries[array_rand($deliveries)];
+            $complaintAndReturn->setDelivery($delivery);
+
+            // Fixer la date de création à une date postérieure à la date de livraison
+            $createdAt = clone $delivery->getDeliveredAt();
+            $createdAt->modify('+' . rand(1, 15) . ' days');
+            $complaintAndReturn->setCreatedAt($createdAt);
+
+            $manager->persist($complaintAndReturn);
+        }
+
+        $manager->flush();
+        $manager->clear();
     }
 
     private function generateCustomerNumber(string $name): string

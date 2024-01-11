@@ -2,16 +2,17 @@ version: '3.8'
 
 services:
   database:
-    image: postgres:latest
+    image: mysql:5.7
     environment:
-      POSTGRES_DB: rapid_vax
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      MYSQL_DATABASE: rapid_vax  # Nom de la base de données
+      MYSQL_USER: user           # Nom d'utilisateur
+      MYSQL_PASSWORD: password   # Mot de passe
+      MYSQL_ROOT_PASSWORD: rootpassword # Mot de passe de l'utilisateur root
     ports:
-      - "5432:5432"
+      - "3306:3306"              # Mappage des ports
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql   # Volume pour la persistance des données
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # script d'initialisation
 
 volumes:
-  postgres_data:
+  mysql_data:

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Customer;
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -27,6 +29,18 @@ class Order
 
     #[ORM\Column(length: 50)]
     private ?string $order_number = null;
+
+    // #[ORM\OneToMany(mappedBy: 'orders', targetEntity: Delivery::class)]
+    // private Collection $deliveries;
+
+    #[ORM\OneToMany(mappedBy: 'orders', targetEntity: ComplaintsAndReturns::class)]
+    private Collection $complaintsAndReturns;
+
+    // public function __construct()
+    // {
+    //     $this->deliveries = new ArrayCollection();
+    //     $this->complaintsAndReturns = new ArrayCollection();
+    // }
 
     public function getId(): ?int
     {
@@ -77,6 +91,66 @@ class Order
     public function setOrderNumber(string $order_number): static
     {
         $this->order_number = $order_number;
+
+        return $this;
+    }
+
+    // /**
+    //  * @return Collection<int, Delivery>
+    //  */
+    // public function getDeliveries(): Collection
+    // {
+    //     return $this->deliveries;
+    // }
+
+    // public function addDelivery(Delivery $delivery): static
+    // {
+    //     if (!$this->deliveries->contains($delivery)) {
+    //         $this->deliveries->add($delivery);
+    //         $delivery->setOrders($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeDelivery(Delivery $delivery): static
+    // {
+    //     if ($this->deliveries->removeElement($delivery)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($delivery->getOrders() === $this) {
+    //             $delivery->setOrders(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
+
+    /**
+     * @return Collection<int, ComplaintsAndReturns>
+     */
+    public function getComplaintsAndReturns(): Collection
+    {
+        return $this->complaintsAndReturns;
+    }
+
+    public function addComplaintsAndReturn(ComplaintsAndReturns $complaintsAndReturn): static
+    {
+        if (!$this->complaintsAndReturns->contains($complaintsAndReturn)) {
+            $this->complaintsAndReturns->add($complaintsAndReturn);
+            $complaintsAndReturn->setOrders($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComplaintsAndReturn(ComplaintsAndReturns $complaintsAndReturn): static
+    {
+        if ($this->complaintsAndReturns->removeElement($complaintsAndReturn)) {
+            // set the owning side to null (unless already changed)
+            if ($complaintsAndReturn->getOrders() === $this) {
+                $complaintsAndReturn->setOrders(null);
+            }
+        }
 
         return $this;
     }
