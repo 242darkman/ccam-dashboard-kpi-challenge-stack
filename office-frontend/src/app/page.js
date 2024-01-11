@@ -9,12 +9,13 @@ import Logo from "@/assets/logo.png";
 import Graph from "../assets/Rectangle21.png";
 import { useRouter } from "next/navigation";
 import ButtonTest from "@/components/buttonTest";
-
+import { login } from "@/app/_api/auth/auth.api.js";
+import get from "lodash/get.js";
 
 export default function Home() {
   // return (
   //   <RootLayout logo={Logo}>
-      
+
   //   </RootLayout>
   // );
 
@@ -29,7 +30,7 @@ export default function Home() {
     if (errorCodeResponse === 401) {
       return;
     }
-    router.push("/");
+    router.push("/order");
   };
   const handleButtonClick = () => {
     const username = document.getElementById("username").value;
