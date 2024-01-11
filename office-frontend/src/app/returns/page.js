@@ -41,8 +41,8 @@ export default function HoverRating() {
                             onChange={(e) => setTypeDemande(e.target.value)}
                             className="w-[350px] h-[40px] p-2 text-black bg-white border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:border-gray-600"
                         >
-                            <option value="temperature-1">Correcte</option>
-                            <option value="temperature-2">Incorrecte</option>
+                            <option value="value-1">Correcte</option>
+                            <option value="value-2">Incorrecte</option>
                         </select>
                     </div>
                 </div>

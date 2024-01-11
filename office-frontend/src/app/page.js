@@ -1,41 +1,94 @@
-'use client';
-import Image from 'next/image';
-import ButtonUsage from '@/components/button';
+"use client";
+import Image from "next/image";
+import ButtonUsage from "@/components/button";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../app/theme";
-import Img from '../assets/imagelogo.png';
-import RootLayout from './layout';
-import Logo from '@/assets/logo.png';
-import Graph from '../assets/Rectangle21.png';
-import Link from 'next/link';
+import Img from "../assets/imagelogo.png";
+import RootLayout from "./layout";
+import Logo from "@/assets/logo.png";
+import Graph from "../assets/Rectangle21.png";
+import { useRouter } from "next/navigation";
+import ButtonTest from "@/components/buttonTest";
+import { login } from "@/app/_api/auth/auth.api.js";
+import get from "lodash/get.js";
 
 export default function Home() {
+  // return (
+  //   <RootLayout logo={Logo}>
+
+  //   </RootLayout>
+  // );
+
+  const router = useRouter();
+
+  const handleLogin = async (username, password) => {
+    if (!username || !password) {
+      return;
+    }
+    const response = await login(username, password);
+    const errorCodeResponse = get(response, "code");
+    if (errorCodeResponse === 401) {
+      return;
+    }
+    router.push("/order");
+  };
+  const handleButtonClick = () => {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    console.log("Form Data:", { username, password });
+    handleLogin(username, password);
+  };
+
   return (
-    <RootLayout logo={Logo} showButton={true}>
-      <main style={{ backgroundColor: 'white' }}>
-        <section className="flex flex-col items-left ml-10 pl-20">
-          <h2 className="text-4xl font-bold m-4" style={{ color: "#22577A" }}>
-            Suivez et améliorez votre<br />satisfaction client avec
-          </h2>
-        </section>
-        <section className='flex'>
-          <div className='flex-col' style={{ marginLeft: '250px', padding: '10px' }}>
-            <div>
-              <Image src={Img} alt='Image Logo' width={150} height={150} />
+    <div
+      style={{ backgroundColor: "#FAFAFA" }}
+      className="min-h-screen bg-gray-100  py-6 flex flex-col justify-center sm:py-12"
+    >
+      <form>
+        <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+          <div className="max-w-md mx-auto">
+            <div className="flex justify-center">
+              <h1 className="text-3xl font-semibold text-cyan-800 ">
+                Connexion
+              </h1>
             </div>
-            <div>
-              <Link href="/login" passHref>
-                <ButtonUsage buttonText="Se connecter" as="/login" />
-              </Link>
+            <div className="divide-y divide-gray-200">
+              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                <div className="relative">
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    className="peer placeholder-transparent h-10 w-full border text-gray-900 focus:outline-none  rounded-md"
+                    placeholder="Pseudonyme"
+                  />
+                  <label className="absolute left-2 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">
+                    Identifiant
+                  </label>
+                </div>
+                <div className="relative w-98 border-black">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    className="peer placeholder-transparent h-10 w-full border text-gray-900 focus:outline-none rounded-md"
+                    placeholder="Saisissez votre mot de passe"
+                  />
+                  <label className="absolute left-2 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">
+                    Mot de passe
+                  </label>
+                </div>
+                <div className="relative flex justify-center w-96">
+                  <ButtonTest
+                    buttonText="Se connecter"
+                    onClick={handleButtonClick}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-          <section>
-            <div style={{ marginLeft: '252px' }}>
-              <Image src={Graph} alt='Graph' width={500} height={500} />
-            </div>
-          </section>
-        </section>
-      </main>
-    </RootLayout>
+        </div>
+      </form>
+    </div>
   );
 }

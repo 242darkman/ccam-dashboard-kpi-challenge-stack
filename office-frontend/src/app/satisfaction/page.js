@@ -8,12 +8,9 @@ import Stack from '@mui/material/Stack';
 
 
 export default function HoverRating() {
-    const [temperature, setTemperature] = useState("temperature-1");
-    const [humidity, setHumidity] = useState("humidity-1");
     const [broken, setBroken] = useState("broken-1");
 
-    const [value, setValue] = React.useState(2);
-    const [value2, setValue2] = React.useState(1);
+    const [value, setValue] = React.useState(1);
 
     return (
         <main className="flex min-h-screen flex-col items-center p-24 bg-white">
@@ -91,10 +88,10 @@ export default function HoverRating() {
                             >
                                 <Rating
                                     name="simple-controlled"
-                                    value={value2}
+                                    value={value}
                                     precision={0.5}
                                     onChange={(event, newValue) => {
-                                        setValue2(newValue);
+                                        setValue(newValue);
                                     }}
                                 />
                             </Box>
