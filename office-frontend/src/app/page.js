@@ -7,15 +7,6 @@ import Img from '../assets/imagelogo.png';
 import RootLayout from './layout';
 import Logo from '@/assets/logo.png';
 import Graph from '../assets/Rectangle21.png';
-'use client';
-import Image from 'next/image';
-import ButtonUsage from '@/components/button';
-import { ThemeProvider } from "@mui/material/styles";
-import { theme } from "../app/theme";
-import Img from '../assets/imagelogo.png';
-import RootLayout from './layout';
-import Logo from '@/assets/logo.png';
-import Graph from '../assets/Rectangle21.png';
 
 export default function Home() {
   return (
