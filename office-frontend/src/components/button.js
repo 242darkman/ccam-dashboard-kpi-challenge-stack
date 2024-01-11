@@ -2,6 +2,7 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../app/theme";
+import Link from 'next/link';
 
 export default function ButtonUsage({ buttonText, onClick }) {
   return (
