@@ -11,21 +11,15 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <RootLayout logo={Logo}>
-      <main>
-        <section className="flex justify-end">
-          <div>
-            <ButtonUsage buttonText="Mon compte" />
-          </div>
-        </section>
+    <RootLayout logo={Logo} showButton={true}>
+      <main style={{ backgroundColor: 'white' }}>
         <section className="flex flex-col items-left ml-10 pl-20">
           <h2 className="text-4xl font-bold m-4" style={{ color: "#22577A" }}>
             Suivez et améliorez votre<br />satisfaction client avec
           </h2>
         </section>
         <section className='flex'>
-          <section className='flex-col'
-            style={{ marginLeft: '250px', padding: '10px' }}>
+          <div className='flex-col' style={{ marginLeft: '250px', padding: '10px' }}>
             <div>
               <Image src={Img} alt='Image Logo' width={150} height={150} />
             </div>
@@ -34,7 +28,7 @@ export default function Home() {
                 <ButtonUsage buttonText="Se connecter" as="/login" />
               </Link>
             </div>
-          </section>
+          </div>
           <section>
             <div style={{ marginLeft: '252px' }}>
               <Image src={Graph} alt='Graph' width={500} height={500} />
@@ -45,6 +39,7 @@ export default function Home() {
     </RootLayout>
   );
 }
+
 
 
 
