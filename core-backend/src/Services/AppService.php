@@ -15,7 +15,7 @@ class AppService
     }
     return $score;
   }
-  function classifierCommentaire($commentaire)
+  public function classifierCommentaire($commentaire)
   {
     $motsClesExcellents = [
       "rapide",
