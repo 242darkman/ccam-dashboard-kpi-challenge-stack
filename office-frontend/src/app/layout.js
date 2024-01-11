@@ -1,20 +1,20 @@
-'use client';
-import { Inter } from 'next/font/google';
-import Head from 'next/head'; 
-import './globals.css';
-import logo from '../assets/logo.png';
-import Image from 'next/image';
-import ButtonUsage from '@/components/button';
 
-const inter = Inter({ subsets: ['latin'] })
+// layout.js
+import { Inter } from "next/font/google";
+import Head from "next/head";
+import "./globals.css";
+import Logo from "../assets/logo.png";
+import Image from "next/image";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children, logo, showButton }) {
   return (
     <html lang="en">
       <body>
-        <header className="flex justify-between items-center p-3 m-5" style={{ backgroundColor: 'white' }}>
-          <div className="flex logo">
-            <Image src={logo} alt="My App Logo" />
+        <header>
+          <div className="logo p-3">
+            <Image priority src={Logo} alt="My-App-Logo" />
           </div>
           {showButton && (
             <div className="flex items-center ml-auto p-3">
@@ -22,6 +22,7 @@ export default function RootLayout({ children, logo, showButton }) {
             </div>
           )}
         </header>
+
         <main>
           {children}
         </main>
