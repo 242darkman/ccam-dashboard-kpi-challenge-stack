@@ -3,6 +3,8 @@ import get from 'lodash/get.js';
 import { login } from '@/app/_api/auth/auth.api.js';
 import ButtonUsage from '@/components/buttonAccueil';
 import { useRouter } from 'next/navigation';
+import RootLayout from '../layout';
+import Logo from '@/assets/logo.png';
 const LoginPage = () => {
   
   const router = useRouter();
@@ -19,6 +21,7 @@ const LoginPage = () => {
     router.push('/');
   };
   return (
+    <RootLayout logo={Logo}>
     <div  style={{ backgroundColor: '#FAFAFA' }} class="min-h-screen bg-gray-100  py-6 flex flex-col justify-center sm:py-12">
       <div class="relative py-3 sm:max-w-xl sm:mx-auto">
           <div class="max-w-md mx-auto">
@@ -41,6 +44,7 @@ const LoginPage = () => {
           </div>
       </div>
     </div>
+    </RootLayout>
   );
 };
 
