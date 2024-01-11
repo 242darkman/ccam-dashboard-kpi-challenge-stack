@@ -21,28 +21,63 @@ class ResponseRepository extends ServiceEntityRepository
         parent::__construct($registry, Response::class);
     }
 
-//    /**
-//     * @return Response[] Returns an array of Response objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Récupère la moyenne globale des notes de Satisfaction.
+     *
+     * @return float La note moyenne.
+     */
+    public function findAverageRating()
+    {
+        return $this->createQueryBuilder('r')
+            ->select('avg(r.value) as averageRating')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-//    public function findOneBySomeField($value): ?Response
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * Récupère la note moyenne par client.
+     *
+     * @return array Retourne un tableau avec le nom du client et sa note moyenne.
+     */
+    public function findAverageRatingPerCustomer()
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.delivery', 'd')
+            ->innerJoin('d.order', 'o')
+            ->innerJoin('o.customer', 'c') // Jointure avec la table customer
+            ->groupBy('c.name')
+            ->select('c.name as customerName, avg(r.value) as averageRating')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Récupère la note moyenne au fil du temps en fonction de l'année et du mois spécifiés.
+     *
+     * @param int|null $year L'année pour laquelle récupérer la note moyenne. Si null, récupère la note moyenne pour toutes les années.
+     * @param int|null $month Le mois pour lequel récupérer la note moyenne. Si null, récupère la note moyenne pour tous les mois.
+     * @throws Some_Exception_Class Une description de l'exception qui peut être levée.
+     * @return mixed Le résultat de la requête pour récupérer la note moyenne au fil du temps.
+     */
+    public function findAverageRatingOverTime($year = null, $month = null)
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->innerJoin('r.delivery', 'd')
+            ->groupBy('year(d.delivered_at), month(d.delivered_at)')
+            ->select('year(d.delivered_at) as year, month(d.delivered_at) as month, avg(r.value) as averageRating')
+            ->orderBy('year', 'ASC')
+            ->addOrderBy('month', 'ASC');
+
+        if ($year !== null) {
+            $qb->andWhere('year(d.delivered_at) = :year')
+                ->setParameter('year', $year);
+        }
+
+        if ($month !== null) {
+            $qb->andWhere('month(d.delivered_at) = :month')
+                ->setParameter('month', $month);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
