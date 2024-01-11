@@ -17,7 +17,7 @@ export default function HoverRating() {
                 {/* Id Livraison */}
                 <div className="shadow-md shadow-[#00000040] flex flex-col items-start gap-7 pt-[1.5625rem] pr-[1.5625rem] pb-[1.5625rem] pl-[1.5625rem] w-[774px] rounded-md bg-neutral-50 mb-[30px]">
                     <div className="text-black leading-[normal]">
-                        Identifiant de la livraison
+                        Identifiant de la livraiso
                     </div>
                     <div className="flex items-start">
                         <input
