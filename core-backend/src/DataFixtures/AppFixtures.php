@@ -117,7 +117,7 @@ class AppFixtures extends Fixture
         // Récupérer tous les clients
         $customers = $manager->getRepository(Customer::class)->findAll();
 
-        for ($i = 1; $i <= 11490; $i++) {
+        for ($i = 1; $i <= 17490; $i++) {
             $order = new Order();
             $delivery = new Delivery();
 
@@ -243,20 +243,39 @@ class AppFixtures extends Fixture
 
     private function createComplaintsAndReturns(ObjectManager $manager): void
     {
-        $types = ['complaints', 'returns'];
-        $deliveries = $manager->getRepository(Delivery::class)->findAll();
+        $types = ['complaint', 'return'];
+        $complaintDescriptions = [
+            "Vaccin reçu avec un emballage endommagé",
+            "Retard dans la livraison du vaccin, dépassement de la date prévue",
+            "Température de conservation inadéquate à la réception du vaccin",
+            "Vaccins reçus avec des étiquettes manquantes ou incorrectes",
+        ];
+        $returnDescriptions = [
+            "Retour en raison de vaccins expirés",
+            "Retour pour surplus de commande de vaccins",
+            "Retour de vaccins suite à une erreur de commande",
+        ];
+        $orders = $manager->getRepository(Order::class)->findAll();
+        $description = '';
 
-        for ($i = 0; $i < 531; $i++) {
+        for ($i = 0; $i < 2531; $i++) {
             $complaintAndReturn = new ComplaintsAndReturns();
-            $complaintAndReturn->setType($types[array_rand($types)]);
+            $type = $types[array_rand($types)];
 
-            // Obtenir une livraison aléatoire
-            $delivery = $deliveries[array_rand($deliveries)];
-            $complaintAndReturn->setDelivery($delivery);
+            if ($i % 20 == 0) {
+                $description = $type === 'complaint' ? $complaintDescriptions[array_rand($complaintDescriptions)] : $returnDescriptions[array_rand($returnDescriptions)];
+            }
 
-            // Fixer la date de création à une date postérieure à la date de livraison
-            $createdAt = clone $delivery->getDeliveredAt();
-            $createdAt->modify('+' . rand(1, 15) . ' days');
+            $complaintAndReturn->setType($type);
+            $complaintAndReturn->setDescription($description);
+
+            // Obtenir une commande aléatoire
+            $order = $orders[array_rand($orders)];
+            $complaintAndReturn->setOrders($order);
+
+            // Fixer la date de création à une date postérieure à la date de commande
+            $createdAt = clone $order->getOrderedAt();
+            $createdAt->modify('+' . rand(7, 30) . ' days');
             $complaintAndReturn->setCreatedAt($createdAt);
 
             $manager->persist($complaintAndReturn);
