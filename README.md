@@ -29,8 +29,9 @@ Notre objectif est la satisfaction client et qualité de service. Pour cela nous
 
 ## Fonctionnalités du Projet
 
-L'application permet au client de se connecter et d'éffectuer une demande de retour ou de reclamation sur les commandes qu'ils ont effectués. 
+L'application permet au client de se connecter et d'éffectuer une demande de retour ou de reclamation sur les commandes qu'il a effectués. 
 Ils ont aussi la possibilité de répondre à un questionnaire pour transmettre leur retour d'impression sur la qualité du service.
+
 L'application s'adresse aussi aux responsables des services S.A.V pour qu'ils puissent avoir un visuelle pertinent concernant les données importantes des retours client.
 
 ## Pré-requis 🎨
