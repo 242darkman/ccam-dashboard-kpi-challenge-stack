@@ -6,7 +6,7 @@ export function createApiRequestInstance({
   data,
   signal,
 }) {
-  const token = localStorage.getItem("token") || "";
+  const token = localStorage.getItem("app_token") || "";
 
   const apiHeaders = {
     "Content-Type": "application/json",

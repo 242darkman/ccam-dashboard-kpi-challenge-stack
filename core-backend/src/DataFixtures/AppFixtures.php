@@ -117,7 +117,7 @@ class AppFixtures extends Fixture
         // Récupérer tous les clients
         $customers = $manager->getRepository(Customer::class)->findAll();
 
-        for ($i = 1; $i <= 17490; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
             $order = new Order();
             $delivery = new Delivery();
 

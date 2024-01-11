@@ -27,34 +27,36 @@ class OrderController extends AbstractController
 
         // Vérifiez si l'utilisateur est un client
         if ($retrievedUser instanceof \App\Entity\Customer) {
-            // Récupérer les paramètres de pagination de la requête
-            $page = $request->query->get('page', 1); // Page par défaut est 1
-            $limit = $request->query->get('limit', 10); // Taille de la page par défaut
 
-            // Calculer l'offset
-            $offset = ($page - 1) * $limit;
+            // // Récupérer les paramètres de pagination de la requête
+            // $page = $request->query->get('page', 1); // Page par défaut est 1
+            // $limit = $request->query->get('limit', 10); // Taille de la page par défaut
+
+            // // Calculer l'offset
+            // $offset = ($page - 1) * $limit;
 
             // Récupérer les commandes avec pagination
-            $orders = $retrievedUser->getOrders($limit, $offset); // Supposant que getOrders supporte la pagination
+            $data = $retrievedUser->getOrders(); // Supposant que getOrders supporte la pagination
 
-            // Récupérer le nombre total de commandes
-            $totalOrders = $userRepository->count([]);
+            // // Récupérer le nombre total de commandes
+            // $totalOrders = $userRepository->count([]);
 
-            $paginationData = [
-                'currentPage' => $page,
-                'pageSize' => $limit,
-                'totalItems' => $totalOrders,
-                'totalPages' => ceil($totalOrders / $limit),
-            ];
+            // $paginationData = [
+            //     'currentPage' => $page,
+            //     'pageSize' => $limit,
+            //     'totalItems' => $totalOrders,
+            //     'totalPages' => ceil($totalOrders / $limit),
+            // ];
 
             return $this->json(
                 [
-                    'orders' => $orders,
-                    'pagination' => $paginationData
+                    'data' => $data,
                 ],
                 Response::HTTP_OK
             );
         }
+
+
 
         return $this->json(['message' => 'No orders found for this client name.'], Response::HTTP_NOT_FOUND);
     }
