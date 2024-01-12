@@ -1,26 +1,10 @@
 "use client";
-import Image from "next/image";
-import ButtonUsage from "@/components/button";
-import { ThemeProvider } from "@mui/material/styles";
-import get from "lodash/get.js";
 import { login } from "@/app/_api/auth/auth.api.js";
-import { theme } from "../app/theme";
-import Img from "../assets/imagelogo.png";
-import RootLayout from "./layout";
-import Logo from "@/assets/logo.png";
-import Graph from "../assets/Rectangle21.png";
 import { useRouter } from "next/navigation";
 import ButtonTest from "@/components/buttonTest";
-import { login } from "@/app/_api/auth/auth.api.js";
 import get from "lodash/get.js";
 
 export default function Home() {
-  // return (
-  //   <RootLayout logo={Logo}>
-
-  //   </RootLayout>
-  // );
-
   const router = useRouter();
 
   const handleLogin = async (username, password) => {
