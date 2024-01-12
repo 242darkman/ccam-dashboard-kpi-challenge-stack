@@ -16,9 +16,12 @@
     "@mui/material": "^5.15.3",
     "@next/eslint-plugin-next": "^14.0.4",
     "axios": "^1.6.5",
+    "chart.js": "^4.4.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "jsonwebtoken": "^9.0.2",
     "next": "^14.0.4",
     "react": "^18",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18"
   },
   "devDependencies": {

@@ -1,22 +1,24 @@
 "use client";
+
 import * as React from "react";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
+import Image from "next/image";
 import List from "@mui/material/List";
+import { ListItemLeftNav } from "./ListItemLeftNav";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoyaltyIcon from "@mui/icons-material/Loyalty";
 import MenuIcon from "@mui/icons-material/Menu";
+import ReplyIcon from "@mui/icons-material/Reply";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import ReplyIcon from "@mui/icons-material/Reply";
-import LoyaltyIcon from "@mui/icons-material/Loyalty";
-import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
-import { ListItemLeftNav } from "./ListItemLeftNav";
-import LogoutIcon from "@mui/icons-material/Logout";
-import Image from "next/image";
 import logo from "../assets/logo.svg";
 
 const drawerWidth = 240;
@@ -42,7 +44,7 @@ export default function LeftNav({ children }) {
         <ListItemLeftNav
           icon={LocalShippingIcon}
           text="Délais de livraison"
-          link="/"
+          link="/dashboard/delivery_delay"
         />
         <ListItemLeftNav
           icon={ReplyIcon}
