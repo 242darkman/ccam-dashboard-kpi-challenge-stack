@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Customer;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,27 +19,15 @@ class Order
     #[ORM\Column]
     private ?\DateTimeImmutable $orderedAt = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Customer $customer = null;
-
     #[ORM\Column]
     private ?float $amount = null;
 
     #[ORM\Column(length: 50)]
     private ?string $order_number = null;
 
-    // #[ORM\OneToMany(mappedBy: 'orders', targetEntity: Delivery::class)]
-    // private Collection $deliveries;
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    private ?Customer $customer = null;
 
-    #[ORM\OneToMany(mappedBy: 'orders', targetEntity: ComplaintsAndReturns::class)]
-    private Collection $complaintsAndReturns;
-
-    // public function __construct()
-    // {
-    //     $this->deliveries = new ArrayCollection();
-    //     $this->complaintsAndReturns = new ArrayCollection();
-    // }
 
     public function getId(): ?int
     {
@@ -55,18 +42,6 @@ class Order
     public function setOrderedAt(\DateTimeImmutable $orderedAt): static
     {
         $this->orderedAt = $orderedAt;
-
-        return $this;
-    }
-
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): static
-    {
-        $this->customer = $customer;
 
         return $this;
     }
@@ -95,63 +70,16 @@ class Order
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Delivery>
-    //  */
-    // public function getDeliveries(): Collection
-    // {
-    //     return $this->deliveries;
-    // }
-
-    // public function addDelivery(Delivery $delivery): static
-    // {
-    //     if (!$this->deliveries->contains($delivery)) {
-    //         $this->deliveries->add($delivery);
-    //         $delivery->setOrders($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeDelivery(Delivery $delivery): static
-    // {
-    //     if ($this->deliveries->removeElement($delivery)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($delivery->getOrders() === $this) {
-    //             $delivery->setOrders(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
-
-    /**
-     * @return Collection<int, ComplaintsAndReturns>
-     */
-    public function getComplaintsAndReturns(): Collection
+    public function getCustomer(): ?Customer
     {
-        return $this->complaintsAndReturns;
+        return $this->customer;
     }
 
-    public function addComplaintsAndReturn(ComplaintsAndReturns $complaintsAndReturn): static
+    public function setCustomer(?Customer $customer): static
     {
-        if (!$this->complaintsAndReturns->contains($complaintsAndReturn)) {
-            $this->complaintsAndReturns->add($complaintsAndReturn);
-            $complaintsAndReturn->setOrders($this);
-        }
+        $this->customer = $customer;
 
         return $this;
     }
 
-    public function removeComplaintsAndReturn(ComplaintsAndReturns $complaintsAndReturn): static
-    {
-        if ($this->complaintsAndReturns->removeElement($complaintsAndReturn)) {
-            // set the owning side to null (unless already changed)
-            if ($complaintsAndReturn->getOrders() === $this) {
-                $complaintsAndReturn->setOrders(null);
-            }
-        }
-
-        return $this;
-    }
 }

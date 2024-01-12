@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\QuestionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,6 +74,7 @@ class QuestionController extends AbstractController
     }
 
 
+    /** */
     #[Route('/questions/get-questions/{id}', name: 'question_detail', methods: ['GET'])]
     public function getQuestionDetail(QuestionRepository $questionRepository, int $id): JsonResponse
     {
@@ -102,4 +104,5 @@ class QuestionController extends AbstractController
             return $this->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
 }

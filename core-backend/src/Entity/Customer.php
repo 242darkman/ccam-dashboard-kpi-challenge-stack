@@ -10,20 +10,19 @@ use Doctrine\Common\Collections\Collection;
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 class Customer extends User
 {
-    public function __construct()
-    {
-        $this->orders = new ArrayCollection();
-    }
-
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[ORM\Column(length: 20)]
     private ?string $customer_number = null;
 
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: "customer")]
-    private $orders;
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
+    private Collection $orders;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
 
     public function getName(): ?string
     {
@@ -50,21 +49,31 @@ class Customer extends User
     }
 
     /**
-     * Get the value of orders
+     * @return Collection<int, Order>
      */
     public function getOrders(): Collection
     {
         return $this->orders;
     }
 
-    /**
-     * Set the value of orders
-     *
-     * @return
-     */
-    public function setOrders($orders)
+    public function addOrder(Order $order): static
     {
-        $this->orders = $orders;
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getCustomer() === $this) {
+                $order->setCustomer(null);
+            }
+        }
 
         return $this;
     }

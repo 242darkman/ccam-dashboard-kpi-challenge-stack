@@ -28,11 +28,25 @@ export default function Home() {
       return;
     }
     const response = await login(username, password);
+
+    // Récupérer le rôle du payload
+    const token = get(response, "token");
+    const payloadBase64 = token.split(".")[1];
+    const decodedPayload = JSON.parse(atob(payloadBase64));
+    const userRoles = decodedPayload.roles;
+    const isAdmin = userRoles.includes("ROLE_ADMIN");
+
     const errorCodeResponse = get(response, "code");
+
     if (errorCodeResponse === 401) {
       return;
     }
-    router.push("/order");
+    console.log("le role est ", userRoles);
+    if (isAdmin) {
+      router.push("/dashboard");
+    } else {
+      router.push("/order");
+    }
   };
   const handleButtonClick = () => {
     const username = document.getElementById("username").value;

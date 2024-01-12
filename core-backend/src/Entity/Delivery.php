@@ -37,7 +37,7 @@ class Delivery
     #[ORM\Column]
     private ?bool $isEmailSent = false;
 
-    #[ORM\ManyToOne(inversedBy: 'deliveries')]
+    #[ORM\ManyToOne]
     private ?Order $orders = null;
 
     public function getId(): ?int

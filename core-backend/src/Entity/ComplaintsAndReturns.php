@@ -23,8 +23,7 @@ class ComplaintsAndReturns
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'complaintsAndReturns')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne]
     private ?Order $orders = null;
 
     public function getId(): ?int

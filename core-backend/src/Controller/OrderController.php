@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\ComplaintsAndReturns;
+use App\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,44 +21,58 @@ class OrderController extends AbstractController
      * @return Some_Return_Value La réponse JSON contenant les commandes.
      */
     #[Route('/orders/get-by-customer', name: 'get_customer_orders', methods: ['GET'])]
-    public function getOrdersByCustomerNumber(
-        UserRepository $userRepository,
-        Request $request
-    ) {
+    public function getOrdersByCustomerNumber(UserRepository $userRepository)
+    {
         $user = $this->getUser();
         $retrievedUser = $userRepository->find($user);
 
         // Vérifiez si l'utilisateur est un client
         if ($retrievedUser instanceof \App\Entity\Customer) {
-            // Récupérer les paramètres de pagination de la requête
-            /* $page = $request->query->get('page', 1); // Page par défaut est 1
-            $limit = $request->query->get('limit', 10); // Taille de la page par défaut
-
-            // Calculer l'offset
-            $offset = ($page - 1) * $limit; */
 
             // Récupérer les commandes avec pagination
-            $orders = $retrievedUser->getOrders(); // Supposant que getOrders supporte la pagination
+            $data = $retrievedUser->getOrders();
+
+
+            // Récupérer les commandes avec pagination
+            $orders = $retrievedUser->getOrders();
 
             // Récupérer le nombre total de commandes
-            /* $totalOrders = $userRepository->count([]);
-
-            $paginationData = [
-                'currentPage' => $page,
-                'pageSize' => $limit,
-                'totalItems' => $totalOrders,
-                'totalPages' => ceil($totalOrders / $limit),
-            ]; */
 
             return $this->json(
                 [
                     'orders' => $orders,
-                    //'pagination' => $paginationData
                 ],
                 Response::HTTP_OK
             );
         }
-
         return $this->json(['message' => 'No orders found for this client name.'], Response::HTTP_NOT_FOUND);
+    }
+
+    #[Route('/orders/complaint-return', name: 'create_complaint_return_order', methods: ['POST'])]
+    public function createComplaintReturn(Request $request, EntityManagerInterface $manager, OrderRepository $orderRepository)
+    {
+        $data = json_decode($request->getContent(), true);
+        $type = $data["type"];
+        $order = $data["orderId"];
+        $description = $data["description"];
+
+        $orderId = $orderRepository->find($order);
+
+        // Créez une nouvelle instance de ComplaintsAndReturns
+        $complaint = new ComplaintsAndReturns();
+
+        $complaint->setType($type);
+        $complaint->setCreatedAt(new \DateTimeImmutable());
+        $complaint->setDescription($description);
+        $complaint->setOrders($orderId);
+
+        // Persistez l'entité dans la base de données
+        $manager->persist($complaint);
+        $manager->flush();
+
+        // Retournez une réponse appropriée
+        return $this->json([
+            'Complaint created successfully', Response::HTTP_CREATED
+        ]);
     }
 }
