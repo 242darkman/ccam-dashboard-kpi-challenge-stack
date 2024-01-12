@@ -53,8 +53,7 @@ class DeliveryRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('d')
             ->andWhere('d.deliveredAt > d.deliveryExpected')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
 
@@ -64,7 +63,47 @@ class DeliveryRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('d')
             ->andWhere('d.deliveredAt < d.deliveryExpected')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+    }
+
+    public function countByDayTime($dayTime)
+    {
+        return $this->createQueryBuilder('d')
+            ->select('COUNT(d)')
+            ->where('d.dayTime = :dayTime')
+            ->setParameter('dayTime', $dayTime)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getDeliveryTrends(\DateTime $startDate, \DateTime $endDate)
+    {
+        $qb = $this->createQueryBuilder('d');
+
+        $qb->select(
+            'SUM(CASE WHEN d.deliveredAt > d.deliveryExpected THEN 1 ELSE 0 END) as lateDeliveries',
+            'SUM(CASE WHEN d.deliveredAt = d.deliveryExpected THEN 1 ELSE 0 END) as onTimeDeliveries',
+            'SUM(CASE WHEN d.deliveredAt < d.deliveryExpected THEN 1 ELSE 0 END) as earlyDeliveries',
+            'COUNT(d.id) as totalDeliveries'
+        )
+            ->where('d.deliveredAt BETWEEN :start AND :end')
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function getDeliveryRates()
+    {
+        $qb = $this->createQueryBuilder('d');
+
+        $qb->select(
+            'SUM(CASE WHEN d.dayTime = \'diurne\' AND d.weekTime = \'weekday\' THEN 1 ELSE 0 END) as weekdayDiurne',
+            'SUM(CASE WHEN d.dayTime = \'nocturne\' AND d.weekTime = \'weekend\' THEN 1 ELSE 0 END) as weekendNocturne',
+            'SUM(CASE WHEN d.dayTime = \'diurne\' AND d.weekTime = \'weekend\' THEN 1 ELSE 0 END) as weekendDiurne',
+            'SUM(CASE WHEN d.dayTime = \'nocturne\' AND d.weekTime = \'weekday\' THEN 1 ELSE 0 END) as weekdayNocturne'
+        );
+
+        return $qb->getQuery()->getScalarResult();
     }
 }

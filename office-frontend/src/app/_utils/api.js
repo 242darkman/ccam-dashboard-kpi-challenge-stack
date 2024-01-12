@@ -1,5 +1,12 @@
-export function createApiRequestInstance({ path, method, params, headers = {}, data, signal }) {
-  const token = localStorage.getItem('token') || '';
+export function createApiRequestInstance({
+  path,
+  method,
+  params,
+  headers = {},
+  data,
+  signal,
+}) {
+  const token = localStorage.getItem("app_token") || "";
 
   const apiHeaders = {
     "Content-Type": "application/json",
@@ -12,12 +19,12 @@ export function createApiRequestInstance({ path, method, params, headers = {}, d
     method,
     params,
     url: path,
-    baseURL : process.env.NEXT_PUBLIC_API_URL,
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers: apiHeaders,
     signal,
   };
 
-  if (!token && !path || !method) {
+  if ((!token && !path) || !method) {
     return;
   }
 

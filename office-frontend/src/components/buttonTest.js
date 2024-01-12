@@ -1,9 +1,8 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../app/theme";
 
-export default function ButtonUsage({ buttonText, onClick }) {
+export default function ButtonTest({ buttonText, onClick }) {
   return (
     <ThemeProvider theme={theme}>
       <Button

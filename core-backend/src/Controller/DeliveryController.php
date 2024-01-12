@@ -121,6 +121,35 @@ class DeliveryController extends AbstractController
         }
     }
 
+    #[Route('/deliveries/trends', name: 'deliveries_trends', methods: ['GET'])]
+    public function getDeliveryTrends(Request $request, DeliveryRepository $deliveryRepository)
+    {
+        try {
+            $startDate = new \DateTime($request->query->get('start'));
+            $endDate = new \DateTime($request->query->get('end'));
+
+            if (!$startDate || !$endDate) {
+                return $this->json(['error' => 'Les paramètres de date sont invalides.'], Response::HTTP_BAD_REQUEST);
+            }
+
+            $trends = $deliveryRepository->getDeliveryTrends($startDate, $endDate);
+
+            return $this->json(['deliveriesTrends' => $trends]);
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    #[Route('/delivery-rates', name: 'delivery_rates')]
+    public function getDeliveryRates(DeliveryRepository $deliveryRepository): Response
+    {
+        $rates = $deliveryRepository->getDeliveryRates();
+
+        return $this->json([
+            'deliveryRates' => $rates
+        ]);
+    }
+
 
 
 
