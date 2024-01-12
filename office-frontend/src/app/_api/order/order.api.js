@@ -4,7 +4,7 @@ import axios from "axios";
 
 export async function getOrders() {
   const request = await api.createApiRequestInstance({
-    path: "/api/orders/get-by-customer",
+    path: "/orders/get-by-customer",
     method: "GET",
   });
   const response = await axios(request);
@@ -14,7 +14,7 @@ export async function getOrders() {
 
 export async function createComplaintReturn(type, description, orderId) {
   const request = await api.createApiRequestInstance({
-    path: "/api/orders/complaint-return",
+    path: "/orders/complaint-return",
     method: "POST",
     data: { type, description, orderId },
   });

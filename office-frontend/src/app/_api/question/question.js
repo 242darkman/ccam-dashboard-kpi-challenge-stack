@@ -4,7 +4,7 @@ import axios from "axios";
 
 export async function getQuestions() {
   const request = await api.createApiRequestInstance({
-    path: "/api/questions/get-questions",
+    path: "/questions/get-questions",
     method: "GET",
   });
   const response = await axios(request);

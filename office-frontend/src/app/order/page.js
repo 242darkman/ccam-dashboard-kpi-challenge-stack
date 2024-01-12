@@ -115,8 +115,9 @@ export default function Order(props) {
     const fetchOrders = async () => {
       try {
         const response = await getOrders();
+        console.log("🚀 ~ fetchOrders ~ response:", response);
         // Formater les dates avant de les stocker dans l'état
-        const formattedOrders = response.data.map((order) => ({
+        const formattedOrders = response.orders.map((order) => ({
           ...order,
           orderedAt: format(
             new Date(order.orderedAt),
@@ -137,7 +138,6 @@ export default function Order(props) {
 
   return (
     <div className="ml-10 mr-10">
-        
       <h1 className="text-[#22577a] font-['Arial'] text-4xl leading-[normal] mb-[60px] text-center ">
         Mes Commandes
       </h1>
