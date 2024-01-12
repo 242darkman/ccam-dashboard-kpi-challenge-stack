@@ -47,6 +47,41 @@ class DeliveryController extends AbstractController
     }
 
 
+    /**
+     * Retour la liste de commandes livrées a temps, en retard et en avance
+     *
+     * @param DeliveryRepository $deliveryRepository
+     * @return void
+     */
+    #[Route('/delivery-by-status', name: 'delivery_by_status', methods: ['GET'])]
+    public function getDeliveryByStatus(DeliveryRepository $deliveryRepository)
+    {
+        $dataAll        = $deliveryRepository->findAll();
+        $listDelay      = $deliveryRepository->findByDelay();
+        $listAdvance    = $deliveryRepository->findByAdvance();
+        $listOnTime     = $deliveryRepository->findByOnTime();
+
+        $countDataAll       = count($dataAll);
+        $countDataDelay     = count($listDelay);
+        $countDataAdvance   = count($listAdvance);
+        $countDataOnTime    = count($listOnTime);
+
+        $dataDelay      = ($countDataAll > 0) ? ($countDataDelay / $countDataAll) * 100 : 0;
+        $dataAdvance    = ($countDataAll > 0) ? ($countDataAdvance / $countDataAll) * 100 : 0;
+        $dataOneTime    = ($countDataAll > 0) ? ($countDataOnTime / $countDataAll) * 100 : 0;
+
+
+        return $this->json(
+            [
+                'onTime' => $dataOneTime,
+                ' delay: ' => $dataDelay,
+                'advance :' => $dataAdvance,
+            ]
+        );
+    }
+
+
+
     // récupérer la liste des livraisons par nuits
     #[Route('/delivery-by-diurne', name: 'delivery_by_diurne', methods: ['GET'])]
     public function getByDiune(DeliveryRepository $deliveryRepository)

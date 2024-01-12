@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\QuestionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,56 +20,18 @@ class QuestionController extends AbstractController
      * @return JsonResponse La réponse JSON contenant les données de la question récupérée.
      */
     #[Route('/questions/get-questions', methods: ['GET'])]
-    public function getQuestions(
-        QuestionRepository $questionRepository,
-        Request $request
-    ): JsonResponse {
-        // Récupérer les paramètres de pagination de la requête
-        $page = $request->query->get('page', 1); // Page par défaut est 1
-        $limit = $request->query->get('limit', 10); // Taille de la page par défaut
-
-        // Calculer l'offset
-        $offset = ($page - 1) * $limit;
-
-        // Récupérer les questions avec pagination
-        $questions = $questionRepository->findBy([], null, $limit, $offset);
-
-        // Récupérer le nombre total de questions
-        $totalQuestions = $questionRepository->count([]);
-        $data = [];
-
-        foreach ($questions as $question) {
-            $questionData = [
-                'id' => $question->getId(),
-                'description' => $question->getDescription(),
-            ];
-
-            $questionData['_links'] = [
-                'self' => [
-                    'href' => $this->generateUrl('question_detail', ['id' => $question->getId()])
-                ],
-            ];
-
-            $data[] = $questionData;
-        }
-
-        $paginationData = [
-            'currentPage' => $page,
-            'pageSize' => $limit,
-            'totalItems' => $totalQuestions,
-            'totalPages' => ceil($totalQuestions / $limit),
-        ];
+    public function getQuestions(QuestionRepository $questionRepository): JsonResponse
+    {
+        $questions = $questionRepository->findAll();
 
         return $this->json(
-            [
-                'questions' => $data,
-                'pagination' => $paginationData
-            ],
+            ['questions' => $questions],
             Response::HTTP_OK
         );
     }
 
 
+    /** */
     #[Route('/questions/get-questions/{id}', name: 'question_detail', methods: ['GET'])]
     public function getQuestionDetail(QuestionRepository $questionRepository, int $id): JsonResponse
     {
@@ -94,4 +57,18 @@ class QuestionController extends AbstractController
             Response::HTTP_OK
         );
     }
+
+    // #[Route('/insert-response', name: 'insert_response', methods: ['POST'])]
+    // public function insertResponse(Request $request, EntityManagerInterface $manager, QuestionRepository $questionRepository): JsonResponse
+    // {
+    //     $data = json_decode($request->getContent(), true);
+    //     $question = $data["idQuestion"];
+    //     $respo = $data["idQuestion"];
+    //     $question = $data["idQuestion"];
+
+    //     return $this->json(
+    //         [""],
+    //         Response::HTTP_OK
+    //     );
+    // }
 }

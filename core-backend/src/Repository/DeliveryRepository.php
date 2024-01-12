@@ -67,4 +67,14 @@ class DeliveryRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    // Méthode pour récupérer la liste des livraisons a temps 
+    public function findByOnTime()
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.deliveredAt = d.deliveryExpected')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
