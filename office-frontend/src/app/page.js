@@ -2,6 +2,8 @@
 import Image from "next/image";
 import ButtonUsage from "@/components/button";
 import { ThemeProvider } from "@mui/material/styles";
+import get from "lodash/get.js";
+import { login } from "@/app/_api/auth/auth.api.js";
 import { theme } from "../app/theme";
 import Img from "../assets/imagelogo.png";
 import RootLayout from "./layout";

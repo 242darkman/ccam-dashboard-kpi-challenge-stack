@@ -32,9 +32,15 @@ class OrderController extends AbstractController
             // Récupérer les commandes avec pagination
             $data = $retrievedUser->getOrders();
 
+
+            // Récupérer les commandes avec pagination
+            $orders = $retrievedUser->getOrders();
+
+            // Récupérer le nombre total de commandes
+
             return $this->json(
                 [
-                    'data' => $data,
+                    'orders' => $orders,
                 ],
                 Response::HTTP_OK
             );

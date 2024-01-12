@@ -5,7 +5,7 @@ import get from "lodash/get.js";
 
 export const login = async (username, password) => {
   const request = await api.createApiRequestInstance({
-    path: "/api/login",
+    path: "/login",
     method: "POST",
     data: { username, password },
   });

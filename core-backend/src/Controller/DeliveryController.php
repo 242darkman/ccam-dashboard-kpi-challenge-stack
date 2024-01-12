@@ -5,6 +5,10 @@ namespace App\Controller;
 use App\Repository\DeliveryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Symfony\Component\Routing\Annotation\Route;
 
 class DeliveryController extends AbstractController
@@ -97,4 +101,56 @@ class DeliveryController extends AbstractController
         $data = $deliveryRepository->findAll();
         return $this->json(['data' => $data]);
     }
+
+
+    #[Route('/deliveries/daytime-rate', name: 'deliveries_daytime', methods: ['GET'])]
+    public function getDaytimeDeliveriesRate(DeliveryRepository $deliveryRepository)
+    {
+        try {
+            $deliveries = $deliveryRepository->count([]);
+            $diurneCount = $deliveryRepository->countByDayTime("diurne");
+            $noctureCount = $deliveryRepository->countByDayTime("nocturne");
+
+            return new JsonResponse([
+                'dayTimeDelivery' => [
+                    'diurne' => ($diurneCount / $deliveries) * 100,
+                    'nocturne' => ($noctureCount / $deliveries) * 100
+                ]
+            ], JsonResponse::HTTP_OK);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'error' => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/deliveries/trends', name: 'deliveries_trends', methods: ['GET'])]
+    public function getDeliveryTrends(Request $request, DeliveryRepository $deliveryRepository)
+    {
+        try {
+            $startDate = new \DateTime($request->query->get('start'));
+            $endDate = new \DateTime($request->query->get('end'));
+
+            if (!$startDate || !$endDate) {
+                return $this->json(['error' => 'Les paramètres de date sont invalides.'], Response::HTTP_BAD_REQUEST);
+            }
+
+            $trends = $deliveryRepository->getDeliveryTrends($startDate, $endDate);
+
+            return $this->json(['deliveriesTrends' => $trends]);
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    #[Route('/delivery-rates', name: 'delivery_rates')]
+    public function getDeliveryRates(DeliveryRepository $deliveryRepository): Response
+    {
+        $rates = $deliveryRepository->getDeliveryRates();
+
+        return $this->json([
+            'deliveryRates' => $rates
+        ]);
+    }
+
 }
