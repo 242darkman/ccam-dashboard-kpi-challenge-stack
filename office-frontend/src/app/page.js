@@ -1,17 +1,18 @@
 "use client";
-
-import ButtonTest from "@/components/buttonTest";
-import ButtonUsage from "@/components/button";
-import Graph from "../assets/Rectangle21.png";
 import Image from "next/image";
-import Img from "../assets/imagelogo.png";
-import Logo from "@/assets/logo.png";
-import RootLayout from "./layout";
+import ButtonUsage from "@/components/button";
 import { ThemeProvider } from "@mui/material/styles";
 import get from "lodash/get.js";
 import { login } from "@/app/_api/auth/auth.api.js";
 import { theme } from "../app/theme";
+import Img from "../assets/imagelogo.png";
+import RootLayout from "./layout";
+import Logo from "@/assets/logo.png";
+import Graph from "../assets/Rectangle21.png";
 import { useRouter } from "next/navigation";
+import ButtonTest from "@/components/buttonTest";
+import { login } from "@/app/_api/auth/auth.api.js";
+import get from "lodash/get.js";
 
 export default function Home() {
   // return (
@@ -33,8 +34,6 @@ export default function Home() {
     }
     router.push("/order");
   };
-
-  
   const handleButtonClick = () => {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
